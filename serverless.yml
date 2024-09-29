@@ -12,7 +12,7 @@ provider:
   environment:
     QUIZ_TABLE: ${self:service}-quiz
     USER_TABLE: ${self:service}-user
-    LEADERBOARD_TABLE: ${self:service}-leaderboard
+    #LEADERBOARD_TABLE: ${self:service}-leaderboard
     TOKEN_SECRET: 09f26
   iam:
     role:
@@ -27,7 +27,7 @@ provider:
           Resource:
             - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QUIZ_TABLE}
             - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.USER_TABLE}
-            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEADERBOARD_TABLE}
+            #- arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LEADERBOARD_TABLE}
 
 package:
   individually: true
@@ -50,7 +50,7 @@ resources:
     userTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:provider.environment.USERS_TABLE}
+        TableName: ${self:provider.environment.USER_TABLE}
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
@@ -59,10 +59,10 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
-    notesTable:
+    quizTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:provider.environment.NOTES_TABLE}
+        TableName: ${self:provider.environment.QUIZ_TABLE}
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -74,3 +74,5 @@ resources:
           - AttributeName: username
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
+
+
