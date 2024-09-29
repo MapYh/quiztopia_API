@@ -1,11 +1,11 @@
 import { sendResponse, sendError } from "../../utils/response/sendresponse";
 const { PutCommand } = require("@aws-sdk/lib-dynamodb");
-const db = require("../../service/db");
+const db = require("../../services/db");
 const { getAccount } = require("../../service/getAccount.js");
 const { v4: uuidv4 } = require("uuid");
 
 async function createAccount(username, password) {
-  const userTable = process.env.USERS_TABLE;
+  const userTable = process.env.USER_TABLE;
   console.log("userTable", userTable);
   const userId = uuidv4();
   console.log("userId", userId);
@@ -26,7 +26,9 @@ async function createAccount(username, password) {
     if (result) {
       return true;
     } else return false;
-  } catch (error) {}
+  } catch (error) {
+    return sendError(500, { success: false, message: error });
+  }
 }
 
 exports.handler = async (event) => {
@@ -50,6 +52,6 @@ exports.handler = async (event) => {
       });
     }
   } catch (error) {
-    return sendError(500, { error });
+    return sendError(500, { success: false, message: error });
   }
 };

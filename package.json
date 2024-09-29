@@ -3,6 +3,7 @@
     "@aws-sdk/client-dynamodb": "^3.658.1",
     "@aws-sdk/lib-dynamodb": "^3.658.1",
     "@middy/core": "^5.5.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^10.0.0"
   }
 }

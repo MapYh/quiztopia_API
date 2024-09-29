@@ -1,4 +1,4 @@
-const db = require("../service/db");
+const db = require("./db");
 const { GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 async function getAccount(username, userId) {
