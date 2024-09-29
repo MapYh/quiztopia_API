@@ -1,0 +1,30 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: randtest
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: quiztopia
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: quiztopia
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  environment:
+    #ROOM_TABLE: ${self:service}-rum
+    #ORDER_TABLE: ${self:service}-order
+
+package:
+  individually: true
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
