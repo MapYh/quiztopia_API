@@ -3,7 +3,19 @@
     "@aws-sdk/client-dynamodb": "^3.658.1",
     "@aws-sdk/lib-dynamodb": "^3.658.1",
     "@middy/core": "^5.5.0",
+    "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
+    "serverless-dotenv-plugin": "^6.0.0",
     "uuid": "^10.0.0"
-  }
+  },
+  "name": "quiz",
+  "version": "1.0.0",
+  "description": "Quiztopia",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }

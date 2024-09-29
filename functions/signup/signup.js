@@ -1,7 +1,7 @@
-import { sendResponse, sendError } from "../../utils/response/sendresponse";
+import { sendResponse, sendError } from "../../utils/sendResponse.js";
 const { PutCommand } = require("@aws-sdk/lib-dynamodb");
-const db = require("../../services/db");
-const { getAccount } = require("../../service/getAccount.js");
+const db = require("../../services/db.js");
+const { getAccount } = require("../../services/getAccount.js");
 const { v4: uuidv4 } = require("uuid");
 
 async function createAccount(username, password) {
