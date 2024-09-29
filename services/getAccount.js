@@ -4,7 +4,7 @@ import { sendError } from "../utils/sendResponse";
 
 async function getAccount(username) {
   const userTable = process.env.USER_TABLE;
-  console.log("userTable", userTable);
+
   try {
     const params = {
       TableName: userTable,
@@ -12,11 +12,9 @@ async function getAccount(username) {
         username,
       },
     };
-    console.log("username", username);
-    console.log("params", params);
+
     const result = await db.send(new GetCommand(params, () => {}));
-    console.log("result", result);
-    console.log("result", result.Item);
+
     if (!result.Item) return false;
     else return result.Item;
   } catch (error) {

@@ -10,7 +10,7 @@ provider:
   runtime: nodejs20.x
   region: eu-north-1
   environment:
-    QUIZ_TABLE: ${self:service}-quiz
+    QUIZ_TABLE: ${self:service}-quiz-two
     USER_TABLE: ${self:service}-user
     #LEADERBOARD_TABLE: ${self:service}-leaderboard
     TOKEN_SECRET: 09f26
@@ -41,6 +41,12 @@ functions:
       - httpApi:
           path: /auth/signup
           method: post
+  postquiz:
+    handler: functions/postquiz/postquiz.handler
+    events:
+      - httpApi:
+          path: /quiz
+          method: post
 
 resources:
   Resources:
@@ -61,13 +67,9 @@ resources:
       Properties:
         TableName: ${self:provider.environment.QUIZ_TABLE}
         AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-          - AttributeName: username
+          - AttributeName: name
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: name
             KeyType: HASH
-          - AttributeName: username
-            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST

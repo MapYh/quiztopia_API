@@ -3,7 +3,7 @@ const { getAccount } = require("../../services/getAccount");
 const jwt = require("jsonwebtoken");
 
 exports.handler = async (event) => {
-  const { username, userId } = JSON.parse(event.body);
+  const { username, password } = JSON.parse(event.body);
 
   try {
     if (!username)
@@ -14,17 +14,24 @@ exports.handler = async (event) => {
     if (!account)
       return sendError(401, { success: false, message: "No account found" });
 
-    const token = jwt.sign({ id: account.userId }, process.env.TOKEN_SECRET, {
-      expiresIn: 30000,
-    });
+    if (account.password == password) {
+      const token = jwt.sign({ id: account.userId }, process.env.TOKEN_SECRET, {
+        expiresIn: 30000,
+      });
 
-    console.log("TOKEN", token);
+      console.log("TOKEN", token);
 
-    return sendResponse({
-      success: true,
-      token: token,
-      account: account,
-    });
+      return sendResponse({
+        success: true,
+        token: token,
+        account: account,
+      });
+    } else {
+      return sendError(400, {
+        success: false,
+        message: "Wrong password.",
+      });
+    }
   } catch (error) {
     return sendError(500, {
       success: false,
