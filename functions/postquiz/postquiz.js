@@ -10,6 +10,7 @@ const handler = middy()
     try {
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
+
       const quizTable = process.env.QUIZ_TABLE;
       console.log("quizTable", quizTable);
 
@@ -18,19 +19,26 @@ const handler = middy()
 
       const newQuiz = {
         TableName: quizTable,
-        Item: { name: name, quizId: id },
+        Item: { name: name, quizId: id, questions: [], userid: event?.id },
       };
 
       const getParams = {
         TableName: quizTable,
         Key: {
-          name: name,
+          name,
         },
       };
       console.log("newQuiz", newQuiz);
       console.log("getParams", getParams);
       const result = await db.send(new GetCommand(getParams));
-      console.log("result", result);
+      console.log("result", result.Item);
+
+      console.log("result", result.Item.userid);
+      console.log("event.id", event.id);
+      if (event.id != result.Item.userid) {
+        return sendResponse({ message: "Wrong account for that quiz." });
+      }
+
       if (result.Item) {
         return sendError(400, {
           success: false,
