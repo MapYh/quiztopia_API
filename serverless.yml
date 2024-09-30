@@ -10,7 +10,7 @@ provider:
   runtime: nodejs20.x
   region: eu-north-1
   environment:
-    QUIZ_TABLE: ${self:service}-quizs
+    QUIZ_TABLE: ${self:service}-quiz
     USER_TABLE: ${self:service}-user
     #LEADERBOARD_TABLE: ${self:service}-leaderboard
     TOKEN_SECRET: 09f26
@@ -46,6 +46,12 @@ functions:
     events:
       - httpApi:
           path: /quiz
+          method: post
+  postquestion:
+    handler: functions/postquestion/postquestion.handler
+    events:
+      - httpApi:
+          path: /quiz/question
           method: post
 
 resources:
