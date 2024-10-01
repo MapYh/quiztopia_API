@@ -28,20 +28,25 @@ const handler = middy()
       console.log("deleteParams", deleteParams);
       const result = await db.send(new GetCommand(deleteParams));
       console.log("result", result.Item);
+      console.log("event?.id", event?.id);
 
       if (!result.Item) {
         return sendResponse({
           message: "Could not find a quiz with that id.",
         });
-      } else {
-        console.log("deleteParams", deleteParams);
-        const result = await db.send(new DeleteCommand(deleteParams));
-        console.log("result", result);
-        if (result) {
-          return sendResponse({
-            message: `Deleted a quiz with the quizId: ${quizId}`,
-          });
-        }
+      }
+      console.log("result.Item", result.Item);
+      if (event.id != result.Item.userid) {
+        return sendResponse({ message: "Wrong account for that quiz." });
+      }
+
+      console.log("deleteParams", deleteParams);
+      const deletResult = await db.send(new DeleteCommand(deleteParams));
+      console.log("result", result);
+      if (deletResult) {
+        return sendResponse({
+          message: `Deleted a quiz with the quizId: ${quizId}`,
+        });
       }
     } catch (error) {
       return sendError(500, { success: false, message: error });
