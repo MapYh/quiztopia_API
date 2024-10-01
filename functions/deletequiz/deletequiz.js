@@ -1,5 +1,5 @@
 import { sendResponse, sendError } from "../../utils/sendResponse.js";
-const { DeleteCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DeleteCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 const db = require("../../services/db.js");
 import middy from "@middy/core";
 
@@ -15,19 +15,21 @@ const handler = middy()
       console.log("quizTable", quizTable);
 
       const { quizId } = event.pathParameters;
+      const { name } = JSON.parse(event.body);
       console.log("name", quizId);
 
       const deleteParams = {
         TableName: quizTable,
         Key: {
           quizId,
+          name,
         },
       };
       console.log("deleteParams", deleteParams);
-      const result = await db.send(new ScanCommand(deleteParams));
-      console.log("result", result);
+      const result = await db.send(new GetCommand(deleteParams));
+      console.log("result", result.Item);
 
-      if (!result.Items) {
+      if (!result.Item) {
         return sendResponse({
           message: "Could not find a quiz with that id.",
         });
@@ -35,9 +37,9 @@ const handler = middy()
         console.log("deleteParams", deleteParams);
         const result = await db.send(new DeleteCommand(deleteParams));
         console.log("result", result);
-        if (result.Item) {
+        if (result) {
           return sendResponse({
-            message: `Deleted a quiz with the name: ${name}`,
+            message: `Deleted a quiz with the quizId: ${quizId}`,
           });
         }
       }
