@@ -60,11 +60,18 @@ functions:
           path: /quiz/{quizId}
           method: delete
   getquiz:
-    handler: functions/getquizbyuser/getquiz.handler
+    handler: functions/getquizbyid/getquiz.handler
     events:
       - httpApi:
           path: /quiz/{quizId}
           method: get
+  getallquizs:
+    handler: functions/getAllQuizes/getallquizes.handler
+    events:
+      - httpApi:
+          path: /quiz
+          method: get
+
 
 resources:
   Resources:

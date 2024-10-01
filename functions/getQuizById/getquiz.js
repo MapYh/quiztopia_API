@@ -3,7 +3,7 @@ const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const db = require("../../services/db.js");
 import middy from "@middy/core";
 
-const { validateToken } = require("../../services/auth");
+const { validateToken } = require("../../services/auth.js");
 
 const handler = middy()
   .handler(async (event) => {
