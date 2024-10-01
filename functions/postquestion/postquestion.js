@@ -54,6 +54,7 @@ const handler = middy()
         const getParamstwo = {
           TableName: quizTable,
           Key: {
+            quizId: question.quizId,
             name,
           },
         };

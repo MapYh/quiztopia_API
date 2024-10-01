@@ -35,7 +35,7 @@ const handler = middy()
       console.log("result outside ", result);
       if (!result.Item) {
         const putResult = await db.send(new PutCommand(newQuiz));
-        console.log("putResult", putResult);
+        console.log("putResult", putResult.Item);
         if (putResult) {
           return sendResponse({
             success: true,
@@ -47,19 +47,18 @@ const handler = middy()
             message: "No new quiz added.",
           });
         }
-      } else {
-        console.log("result", result.Item);
-
-        console.log("result", result.Item.userid);
-        console.log("event.id", event.id);
-        if (event.id != result.Item.userid) {
-          return sendResponse({ message: "Wrong account for that quiz." });
-        }
-        return sendError(400, {
-          success: false,
-          message: "A quiz with that name already exists.",
-        });
       }
+      console.log("result", result.Item);
+
+      console.log("result", result.Item.userid);
+      console.log("event.id", event.id);
+      if (event.id != result.Item.userid) {
+        return sendResponse({ message: "Wrong account for that quiz." });
+      }
+      return sendError(400, {
+        success: false,
+        message: "A quiz with that name already exists.",
+      });
     } catch (error) {
       return sendError(500, { success: false, message: error });
     }
