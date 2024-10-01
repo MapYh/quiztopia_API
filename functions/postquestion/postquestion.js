@@ -15,7 +15,7 @@ const handler = middy()
       console.log("quizTable", quizTable);
 
       const question = JSON.parse(event.body);
-      const { name } = JSON.parse(event.body);
+      const { name, quizId } = JSON.parse(event.body);
       console.log("name", name);
       console.log("question", question);
 
@@ -23,6 +23,7 @@ const handler = middy()
         TableName: quizTable,
         Key: {
           name,
+          quizId,
         },
       };
 

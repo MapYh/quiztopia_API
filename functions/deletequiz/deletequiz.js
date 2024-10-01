@@ -1,5 +1,5 @@
 import { sendResponse, sendError } from "../../utils/sendResponse.js";
-const { PutCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DeleteCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const db = require("../../services/db.js");
 import middy from "@middy/core";
 
@@ -14,24 +14,32 @@ const handler = middy()
       const quizTable = process.env.QUIZ_TABLE;
       console.log("quizTable", quizTable);
 
-      const { name } = JSON.parse(event.body);
-      console.log("name", name);
-      console.log("question", question);
+      const { quizId } = event.pathParameters;
+      console.log("name", quizId);
 
-      const getParams = {
+      const deleteParams = {
         TableName: quizTable,
         Key: {
-          name,
+          quizId,
         },
       };
-      console.log("getParams", getParams);
-      const result = await db.send(new GetCommand(getParams));
+      console.log("deleteParams", deleteParams);
+      const result = await db.send(new ScanCommand(deleteParams));
       console.log("result", result);
 
-      if (!result.Item) {
+      if (!result.Items) {
         return sendResponse({
-          message: "Could not find a quiz with that name",
+          message: "Could not find a quiz with that id.",
         });
+      } else {
+        console.log("deleteParams", deleteParams);
+        const result = await db.send(new DeleteCommand(deleteParams));
+        console.log("result", result);
+        if (result.Item) {
+          return sendResponse({
+            message: `Deleted a quiz with the name: ${name}`,
+          });
+        }
       }
     } catch (error) {
       return sendError(500, { success: false, message: error });

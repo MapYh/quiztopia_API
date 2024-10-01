@@ -16,7 +16,7 @@ const handler = middy()
 
       const { name } = JSON.parse(event.body);
       const id = uuid.v4();
-
+      console.log("name", name);
       const newQuiz = {
         TableName: quizTable,
         Item: { name: name, quizId: id, questions: [], userid: event?.id },
@@ -25,7 +25,8 @@ const handler = middy()
       const getParams = {
         TableName: quizTable,
         Key: {
-          name,
+          quizId: id,
+          name: name,
         },
       };
       console.log("newQuiz", newQuiz);
