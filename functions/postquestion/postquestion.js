@@ -12,12 +12,11 @@ const handler = middy()
         return sendError(401, { success: false, message: "Invalid token" });
 
       const quizTable = process.env.QUIZ_TABLE;
-      console.log("quizTable", quizTable);
+    
 
       const question = JSON.parse(event.body);
-      const { name, quizId } = JSON.parse(event.body);
-      console.log("name", name);
-      console.log("question", question);
+      const { name, quizId, userid } = JSON.parse(event.body);
+    
 
       const getParams = {
         TableName: quizTable,
@@ -29,26 +28,29 @@ const handler = middy()
 
       console.log("getParams", getParams);
       const result = await db.send(new GetCommand(getParams));
-      console.log("result", result);
+      
+      
+      console.log("result", result.Item);
       if (!result.Item) {
         return sendResponse({
           message: "Could not find a quiz with that name",
         });
       } else {
-        console.log("result", result.Item);
-
-        console.log("result", result.Item.userid);
-        console.log("event.id", event.id);
+        for(let i = 0;  i< result.Item.questions.length; i++){
+          if(result.Item.questions[i].question == question.question){
+            return sendResponse({success: false, message: "That question is already in the quiz."});
+          }
+        }
+       
         if (event.id != result.Item.userid) {
           return sendResponse({ message: "Wrong account for that quiz." });
         }
         const newquestion = {
           TableName: quizTable,
           Item: {
-            name: name,
-            quizId: question.quizId,
-            questions: [question],
-            userid: event?.id,
+            question: question.question,
+            answer: question.answer,
+            location: question.location,
           },
         };
         const getParamstwo = {
@@ -56,25 +58,43 @@ const handler = middy()
           Key: {
             quizId: question.quizId,
             name,
+            
           },
         };
 
-        const putResult = await db.send(new PutCommand(newquestion));
+        console.log("result.Item.questions first", result.Item.questions);
+        result.Item.questions.push(newquestion.Item);
+        console.log("result.Item.questions", result.Item.questions);
+        console.log("result.Item.userId", result.Item.userId);
+        const saveparams = {
+          TableName: quizTable,
+          Item: {
+            quizId,
+            name,
+            questions: result.Item.questions,
+            userid: userid
+          },
+        }; 
         const getResult = await db.send(new GetCommand(getParamstwo));
-        console.log("putResult", putResult);
+
+        const putResult = await db.send(new PutCommand(saveparams));
+        /* const getResult = await db.send(new GetCommand(getParamstwo)); */
+         console.log("putResult", putResult);
         console.log("getResult", getResult.Item);
-        if (putResult) {
-          return sendResponse({
-            success: true,
-            message: getResult.Item,
-          });
-        } else {
-          return sendResponse({
-            success: false,
-            message: "No new question added.",
-          });
+          if (putResult) {
+            return sendResponse({
+              success: true,
+              message: getResult.Item,
+            });
+          } else {
+            return sendResponse({
+              success: false,
+              message: "No new question added.",
+            });
+          }
         }
-      }
+      
+    
     } catch (error) {
       return sendError(500, { success: false, message: error });
     }

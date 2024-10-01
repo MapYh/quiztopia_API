@@ -48,10 +48,7 @@ const handler = middy()
           });
         }
       }
-      console.log("result", result.Item);
 
-      console.log("result", result.Item.userid);
-      console.log("event.id", event.id);
       if (event.id != result.Item.userid) {
         return sendResponse({ message: "Wrong account for that quiz." });
       }
