@@ -3,17 +3,18 @@ const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const db = require("../../services/db.js");
 import middy from "@middy/core";
 
-const { validateToken } = require("../../services/auth.js");
+
+const {getvalidation} = require("../../services/requestValidation/getvalidation.js");
 
 const handler = middy()
   .handler(async (event) => {
     try {
-      
+      if (event.error == "400")
+      return sendError(400, { success: false, message: "Invalid event body, it should be empty." });
 
       const quizTable = process.env.QUIZ_TABLE;
       const { quizId } = event.pathParameters;
-      console.log("quizid", quizId);
-      console.log("quizTable", quizTable);
+    
       const queryParams = {
         TableName: quizTable,
         KeyConditionExpression: "quizId = :v1",
@@ -25,7 +26,6 @@ const handler = middy()
       console.log("queryParams", queryParams);
       const result = await db.send(new QueryCommand(queryParams));
 
-      console.log("result", result);
       if (!result.Items) {
         return sendResponse({
           success: false,
@@ -40,6 +40,6 @@ const handler = middy()
       return sendError(500, { success: false, message: error.message });
     }
   })
-  .use(validateToken);
+  .use(getvalidation);
 
 module.exports = { handler };

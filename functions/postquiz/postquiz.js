@@ -12,7 +12,7 @@ const handler = middy()
         return sendError(401, { success: false, message: "Invalid token" });
 
       const quizTable = process.env.QUIZ_TABLE;
-      console.log("quizTable", quizTable);
+   
 
       const { name } = JSON.parse(event.body);
       const id = uuid.v4();
@@ -29,13 +29,12 @@ const handler = middy()
           name: name,
         },
       };
-      console.log("newQuiz", newQuiz);
-      console.log("getParams", getParams);
+     
       const result = await db.send(new GetCommand(getParams));
-      console.log("result outside ", result);
+      
       if (!result.Item) {
         const putResult = await db.send(new PutCommand(newQuiz));
-        console.log("putResult", putResult.Item);
+      
         if (putResult) {
           return sendResponse({
             success: true,

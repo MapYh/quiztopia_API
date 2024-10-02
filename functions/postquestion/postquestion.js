@@ -47,8 +47,7 @@ const handler = middy()
             return sendResponse({success: false, message: "That question is already in the quiz."});
           }
         }
-        console.log("event?.id", event?.id);
-       console.log("result.Item.userid", result.Item.userid);
+   
         
         const newquestion = {
           TableName: quizTable,
@@ -67,10 +66,9 @@ const handler = middy()
           },
         };
 
-        console.log("result.Item.questions first", result.Item.questions);
+     
         result.Item.questions.push(newquestion.Item);
-        console.log("result.Item.questions", result.Item.questions);
-        console.log("result.Item.userId", result.Item.userId);
+       
         const saveparams = {
           TableName: quizTable,
           Item: {
@@ -83,9 +81,8 @@ const handler = middy()
         const getResult = await db.send(new GetCommand(getParamstwo));
 
         const putResult = await db.send(new PutCommand(saveparams));
-        /* const getResult = await db.send(new GetCommand(getParamstwo)); */
-         console.log("putResult", putResult);
-        console.log("getResult", getResult.Item);
+       
+   
           if (putResult) {
             return sendResponse({
               success: true,

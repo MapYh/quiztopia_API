@@ -19,7 +19,7 @@ exports.handler = async (event) => {
         expiresIn: 30000,
       });
 
-      console.log("TOKEN", token);
+    /*   console.log("TOKEN", token); */
 
       return sendResponse({
         success: true,

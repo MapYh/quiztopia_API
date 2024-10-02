@@ -12,11 +12,11 @@ const handler = middy()
         return sendError(401, { success: false, message: "Invalid token" });
 
       const quizTable = process.env.QUIZ_TABLE;
-      console.log("quizTable", quizTable);
+
 
       const { quizId } = event.pathParameters;
       const { name } = JSON.parse(event.body);
-      console.log("name", quizId);
+    
 
       const deleteParams = {
         TableName: quizTable,
@@ -25,24 +25,22 @@ const handler = middy()
           name,
         },
       };
-      console.log("deleteParams", deleteParams);
+    
       const result = await db.send(new GetCommand(deleteParams));
-      console.log("result", result.Item);
-      console.log("event?.id", event?.id);
+    
 
       if (!result.Item) {
         return sendResponse({
           message: "Could not find a quiz with that id.",
         });
       }
-      console.log("result.Item", result.Item);
+     
       if (event.id != result.Item.userid) {
         return sendResponse({ message: "Wrong account for that quiz." });
       }
 
-      console.log("deleteParams", deleteParams);
       const deletResult = await db.send(new DeleteCommand(deleteParams));
-      console.log("result", result);
+  
       if (deletResult) {
         return sendResponse({
           message: `Deleted a quiz with the quizId: ${quizId}`,
