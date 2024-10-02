@@ -4,10 +4,21 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 
 const { validateToken } = require("../../services/auth");
+const { deletevalidation } = require("../../services/requestValidation/deletevalidation.js");
+
 
 const handler = middy()
   .handler(async (event) => {
     try {
+      console.log("deletquiz",event);
+
+     if(!event.body){
+      return sendError(400, { success: false, message: "The request body cant be empty." });
+     }
+      
+      if (event.error == "400")
+      return sendError(400, { success: false, message: "Request body should only contain the name of the quiz you wish to delete." });
+
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
 
@@ -31,7 +42,7 @@ const handler = middy()
 
       if (!result.Item) {
         return sendResponse({
-          message: "Could not find a quiz with that id.",
+          message: "Could not find a quiz with that id/name.",
         });
       }
      
@@ -47,9 +58,9 @@ const handler = middy()
         });
       }
     } catch (error) {
-      return sendError(500, { success: false, message: error });
+      return sendError(500, { success: false, message: error.message });
     }
   })
-  .use(validateToken);
+  .use(validateToken).use(deletevalidation);
 
 module.exports = { handler };
