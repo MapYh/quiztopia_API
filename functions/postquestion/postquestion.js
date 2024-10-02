@@ -16,8 +16,10 @@ const handler = middy()
 
       const question = JSON.parse(event.body);
       const { name, quizId, userid } = JSON.parse(event.body);
-    
-
+    if(userid != event?.id){
+      return sendResponse({ message: "Wrong userid for that quiz." });
+    }
+   
       const getParams = {
         TableName: quizTable,
         Key: {
@@ -27,9 +29,13 @@ const handler = middy()
       };
 
       console.log("getParams", getParams);
-      const result = await db.send(new GetCommand(getParams));
+      const result = await db.send(new GetCommand(getParams
+      ));
       
-      
+  
+      if (event.id != result.Item.userid) {
+        return sendResponse({ message: "Wrong account for that quiz." });
+      }
       console.log("result", result.Item);
       if (!result.Item) {
         return sendResponse({
@@ -41,10 +47,9 @@ const handler = middy()
             return sendResponse({success: false, message: "That question is already in the quiz."});
           }
         }
-       
-        if (event.id != result.Item.userid) {
-          return sendResponse({ message: "Wrong account for that quiz." });
-        }
+        console.log("event?.id", event?.id);
+       console.log("result.Item.userid", result.Item.userid);
+        
         const newquestion = {
           TableName: quizTable,
           Item: {
@@ -87,7 +92,7 @@ const handler = middy()
               message: getResult.Item,
             });
           } else {
-            return sendResponse({
+            return sendError(400, {
               success: false,
               message: "No new question added.",
             });
@@ -96,7 +101,7 @@ const handler = middy()
       
     
     } catch (error) {
-      return sendError(500, { success: false, message: error });
+      return sendError(500, { success: false, message: error.message });
     }
   })
   .use(validateToken);

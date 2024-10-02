@@ -25,7 +25,7 @@ const handler = middy()
       console.log("quizArray",quizArray);
       return sendResponse({success: true, message: quizArray});
     } catch (error) {
-      return sendError(500, { success: false, message: error });
+      return sendError(500, { success: false, message: error.message });
     }
   })
 

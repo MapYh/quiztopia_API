@@ -57,7 +57,7 @@ const handler = middy()
         message: "A quiz with that name already exists.",
       });
     } catch (error) {
-      return sendError(500, { success: false, message: error });
+      return sendError(500, { success: false, message: error.message });
     }
   })
   .use(validateToken);

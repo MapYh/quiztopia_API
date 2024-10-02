@@ -8,8 +8,7 @@ const { validateToken } = require("../../services/auth.js");
 const handler = middy()
   .handler(async (event) => {
     try {
-      if (!event?.id || (event?.error && event?.error === "401"))
-        return sendError(401, { success: false, message: "Invalid token" });
+      
 
       const quizTable = process.env.QUIZ_TABLE;
       const { quizId } = event.pathParameters;
@@ -38,7 +37,7 @@ const handler = middy()
         message: result.Items,
       });
     } catch (error) {
-      return sendError(500, { success: false, message: error });
+      return sendError(500, { success: false, message: error.message });
     }
   })
   .use(validateToken);

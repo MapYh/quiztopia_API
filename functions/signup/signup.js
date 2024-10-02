@@ -52,6 +52,6 @@ exports.handler = async (event) => {
       });
     }
   } catch (error) {
-    return sendError(500, { success: false, message: error });
+    return sendError(500, { success: false, message: error.message });
   }
 };

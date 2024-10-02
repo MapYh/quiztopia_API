@@ -18,7 +18,7 @@ async function getAccount(username) {
     if (!result.Item) return false;
     else return result.Item;
   } catch (error) {
-    return sendError({ success: false, message: error });
+    return sendError({ success: false, message: error.message });
   }
 }
 

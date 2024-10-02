@@ -35,7 +35,7 @@ exports.handler = async (event) => {
   } catch (error) {
     return sendError(500, {
       success: false,
-      message: "Could not get account",
+      message: "Could not get account", error: error.message,
     });
   }
 };
