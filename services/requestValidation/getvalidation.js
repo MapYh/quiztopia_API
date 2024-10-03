@@ -3,7 +3,7 @@
 const getvalidation = {
     before: async (request) => {
       try {
-        console.log(request.event.body);
+       
         if(request.event.body){
             throw new Error("Request body should be empty.");
         }

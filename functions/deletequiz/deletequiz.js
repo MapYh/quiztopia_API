@@ -10,7 +10,7 @@ const { deletevalidation } = require("../../services/requestValidation/delete_po
 const handler = middy()
   .handler(async (event) => {
     try {
-      console.log("deletquiz",event);
+     
 
      if(!event.body){
       return sendError(400, { success: false, message: "The request body cant be empty." });

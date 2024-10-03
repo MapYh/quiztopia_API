@@ -42,7 +42,7 @@ const handler = middy()
     const { username, password } = JSON.parse(event.body);
     //Checks if an account exists in the database with the user provided username.
     let foundAccount = await getAccount(username);
-    console.log("foundAccount", foundAccount);
+
     if (foundAccount) {
       return sendError(400, {
         success: false,
@@ -50,7 +50,7 @@ const handler = middy()
       });
     }
     const truIfCreatedAccount = await createAccount(username, password);
-    console.log("truIfCreatedAccount", truIfCreatedAccount);
+  
     if (truIfCreatedAccount) {
       return sendResponse({
         success: true,

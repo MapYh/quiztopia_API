@@ -35,7 +35,7 @@ const handler = middy()
         },
       };
 
-      console.log("getParams", getParams);
+  
       const result = await db.send(new GetCommand(getParams
       ));
       
@@ -43,7 +43,7 @@ const handler = middy()
       if (event.id != result.Item.userid) {
         return sendResponse({ message: "Wrong account for that quiz." });
       }
-      console.log("result", result.Item);
+     
       if (!result.Item) {
         return sendResponse({
           message: "Could not find a quiz with that name",

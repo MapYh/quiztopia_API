@@ -12,7 +12,7 @@ const registerpointsvalidation = {
         Object.keys(JSON.parse(request.event.body)).includes(field));
        
         request.event.isValid = isValid;
-        console.log("isvalid",isValid );
+     
         if(request.event.isValid == false){
             throw new Error();
         }

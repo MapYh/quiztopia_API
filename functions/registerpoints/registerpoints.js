@@ -29,7 +29,7 @@ const handler = middy()
     }
     }
     const result = await db.send(new GetCommand( GetParams ));
-    console.log("result", result.Item);
+    
 
     if(!result.Item){
         return sendError(400, { success: false, message: "Could not find a quiz with that id/name." });
@@ -42,7 +42,7 @@ const handler = middy()
         }
         }
         const leaderboardresult = await db.send(new GetCommand( GetleaderBoardParams ));
-        console.log("leaderboardresult", leaderboardresult.Item);
+      
     if(leaderboardresult.Item){
         if(points > leaderboardresult.Item.points){
             const putParams = {
@@ -56,7 +56,7 @@ const handler = middy()
                 }
         }
         const putresult = await db.send(new PutCommand( putParams ));
-        console.log("putresult", putresult);
+      
         if(putresult){
             return sendResponse({success: true, message: "New leaderboard score registered."});
         }
@@ -76,7 +76,7 @@ const putParams = {
     }
 }
 const putresult = await db.send(new PutCommand( putParams ));
-console.log("putresult", putresult);
+
 if(putresult){
 return sendResponse({success: true, message: "New leaderboard score registered."});
 }
