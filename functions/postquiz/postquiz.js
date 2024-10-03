@@ -4,10 +4,15 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 const uuid = require("uuid");
 const { validateToken } = require("../../services/auth");
+const { delete_post_validation } = require("../../services/requestValidation/delete_post_validation.js");
 
 const handler = middy()
   .handler(async (event) => {
     try {
+
+      if (event.error == "400")
+      return sendError(400, { success: false, message: "Request body should only contain the name of the quiz." });
+
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
 
@@ -59,6 +64,6 @@ const handler = middy()
       return sendError(500, { success: false, message: error.message });
     }
   })
-  .use(validateToken);
+  .use(validateToken).use(delete_post_validation);
 
 module.exports = { handler };

@@ -12,7 +12,7 @@ provider:
   environment:
     QUIZ_TABLE: ${self:service}-quiz
     USER_TABLE: ${self:service}-user
-    #LEADERBOARD_TABLE: ${self:service}-leaderboard
+    LEADER_TABLE: ${self:service}-board
     TOKEN_SECRET: 09f26
 
   iam:
@@ -71,6 +71,12 @@ functions:
       - httpApi:
           path: /quiz
           method: get
+  registerpoints:
+    handler: functions/registerpoints/registerpoints.handler
+    events:
+      - httpApi:
+          path: /registerpoints
+          method: post
 
 
 resources:
@@ -91,6 +97,22 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:provider.environment.QUIZ_TABLE}
+        AttributeDefinitions:
+          - AttributeName: quizId
+            AttributeType: S
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: quizId
+            KeyType: HASH
+          - AttributeName: name
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+
+    leaderboard:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.LEADER_TABLE}
         AttributeDefinitions:
           - AttributeName: quizId
             AttributeType: S

@@ -4,7 +4,7 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 
 const { validateToken } = require("../../services/auth");
-const { deletevalidation } = require("../../services/requestValidation/deletevalidation.js");
+const { deletevalidation } = require("../../services/requestValidation/delete_post_validation.js");
 
 
 const handler = middy()

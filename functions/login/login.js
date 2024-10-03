@@ -2,7 +2,7 @@ import { sendResponse, sendError } from "../../utils/sendResponse";
 const { getAccount } = require("../../services/getAccount");
 const jwt = require("jsonwebtoken");
 import middy from "@middy/core";
-const { loginvalidation } = require("../../services/requestValidation/login_signupvalidation");
+const { loginsignupvalidation } = require("../../services/requestValidation/login_signupvalidation");
 
 
 const handler = middy()
@@ -46,6 +46,6 @@ const handler = middy()
       message: "Could not get account", error: error.message,
     });
   }
-}).use( loginvalidation );
+}).use( loginsignupvalidation);
 
 module.exports = { handler };

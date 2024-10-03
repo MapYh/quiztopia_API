@@ -4,10 +4,17 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 
 const { validateToken } = require("../../services/auth");
+const { postquestionvalidation } = require("../../services/requestValidation/postquestion_validation.js");
+
+
 
 const handler = middy()
   .handler(async (event) => {
     try {
+
+      if (event.error == "400")
+      return sendError(400, { success: false, message: "Somethings wrong with the request body, check that there is six keys, and no spelling errors." });
+
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
 
@@ -101,6 +108,6 @@ const handler = middy()
       return sendError(500, { success: false, message: error.message });
     }
   })
-  .use(validateToken);
+  .use(validateToken).use(postquestionvalidation);
 
 module.exports = { handler };
