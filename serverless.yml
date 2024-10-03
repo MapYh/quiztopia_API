@@ -77,7 +77,12 @@ functions:
       - httpApi:
           path: /registerpoints
           method: post
-
+  getleaderboard:
+    handler: functions/getleaderboard/getleaderboard.handler
+    events:
+      - httpApi:
+          path: /leaderboard
+          method: get
 
 resources:
   Resources:
