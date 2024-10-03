@@ -1,4 +1,4 @@
-const loginvalidation = {
+const loginsignupvalidation = {
     before: async (request) => {
       try {
         
@@ -28,4 +28,4 @@ const loginvalidation = {
     },
   };
   
-  module.exports = { loginvalidation };
+  module.exports = { loginsignupvalidation };
