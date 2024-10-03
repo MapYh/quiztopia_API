@@ -4,16 +4,23 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 const uuid = require("uuid");
 
-
+const {registerpointsvalidation} = require("../../services/requestValidation/registerpointsvalidation.js");
 
 const handler = middy()
   .handler(async (event) => {
     try {
+
+        if (event.error == "400")
+            return sendError(400, { success: false, message: "Somethings wrong with the request body, check that the points are positive, and that all the keys exist, there should be four keys." });
+
+
     const quizTable = process.env.QUIZ_TABLE;
     const leaderTable = process.env.LEADER_TABLE;
     const {name, points, quizId, userId} = JSON.parse(event.body);
     const leaderBoardId = uuid.v4(); 
-
+    if(points<0){
+        return sendError(400, { success: false, message: "Points cant be negative." });
+    }
     const GetParams = {
     TableName: quizTable,
     Key: {
@@ -27,25 +34,57 @@ const handler = middy()
     if(!result.Item){
         return sendError(400, { success: false, message: "Could not find a quiz with that id/name." });
     }
-
-    const putParams = {
+    const GetleaderBoardParams = {
         TableName: leaderTable,
-        Item: {
+        Key: {
             quizId,
             name,
-            points,
-            userId,
-            leaderBoardId
         }
+        }
+        const leaderboardresult = await db.send(new GetCommand( GetleaderBoardParams ));
+        console.log("leaderboardresult", leaderboardresult.Item);
+    if(leaderboardresult.Item){
+        if(points > leaderboardresult.Item.points){
+            const putParams = {
+                TableName: leaderTable,
+                Item: {
+                    quizId,
+                    name,
+                    points,
+                    userId,
+                    leaderBoardId
+                }
+        }
+        const putresult = await db.send(new PutCommand( putParams ));
+        console.log("putresult", putresult);
+        if(putresult){
+            return sendResponse({success: true, message: "New leaderboard score registered."});
+        }
+    }else{
+        return sendResponse({success: true, message: "No new highscore."});
     }
-    const putresult = await db.send(new PutCommand( putParams ));
-    console.log("putresult", putresult);
-    if(putresult){
-        return sendResponse({success: true, message: "Leaderboard score registered."});
+   
+}
+const putParams = {
+    TableName: leaderTable,
+    Item: {
+        quizId,
+        name,
+        points,
+        userId,
+        leaderBoardId
     }
-    } catch (error) {
+}
+const putresult = await db.send(new PutCommand( putParams ));
+console.log("putresult", putresult);
+if(putresult){
+return sendResponse({success: true, message: "New leaderboard score registered."});
+}
+       
+
+} catch (error) {
       return sendError(500, { success: false, message: error.message });
-    }
-})
+}
+}).use(registerpointsvalidation);
 
 module.exports = { handler };

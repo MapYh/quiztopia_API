@@ -11,7 +11,7 @@ const handler = middy()
     try {
 
       if (event.error == "400")
-      return sendError(400, { success: false, message: "Request body should only contain the name of the quiz." });
+        return sendError(400, { success: false, message: "Request body should only contain the name of the quiz." });
 
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
