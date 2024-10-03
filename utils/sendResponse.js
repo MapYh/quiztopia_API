@@ -17,5 +17,4 @@ function sendResponse(response) {
     body: JSON.stringify(response),
   };
 }
-
 module.exports = { sendError, sendResponse };

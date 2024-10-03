@@ -20,7 +20,6 @@ const validateToken = {
       );
 
       request.event.id = data.id;
-
       return request.response;
     } catch (error) {
       request.event.error = "400";

@@ -12,7 +12,6 @@ async function getAccount(username) {
         username,
       },
     };
-
     const result = await db.send(new GetCommand(params, () => {}));
 
     if (!result.Item) return false;

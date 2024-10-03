@@ -8,7 +8,6 @@ const { loginsignupvalidation } = require("../../services/requestValidation/logi
 const handler = middy()
 .handler( async (event) => {
   const { username, password } = JSON.parse(event.body);
-
   try {
 
     if (event.error == "400")

@@ -102,7 +102,6 @@ const handler = middy()
             });
           }
         }
-      
     
     } catch (error) {
       return sendError(500, { success: false, message: error.message });

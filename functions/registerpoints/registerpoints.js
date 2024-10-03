@@ -63,8 +63,7 @@ const handler = middy()
             }
             }else{
                 return sendResponse({success: true, message: "No new highscore."});
-            }
-   
+            }  
 }
 const putParams = {
     TableName: leaderTable,

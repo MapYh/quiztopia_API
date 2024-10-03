@@ -36,7 +36,6 @@ const handler = middy()
       };
      
       const result = await db.send(new GetCommand(getParams));
-      
       if (!result.Item) {
         const putResult = await db.send(new PutCommand(newQuiz));
       

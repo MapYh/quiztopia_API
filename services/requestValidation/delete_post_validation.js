@@ -24,7 +24,6 @@ const delete_post_validation = {
         return request.response;
       }
     },
-    
     onError: async (request) => {
       request.event.error = "400";
       return request.response;

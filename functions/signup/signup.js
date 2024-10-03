@@ -38,7 +38,6 @@ const handler = middy()
   try {
     if (event.error == "400")
     return sendError(400, { success: false, message: "Invalid request body, it should contain the username and password." });
-
     const { username, password } = JSON.parse(event.body);
     //Checks if an account exists in the database with the user provided username.
     let foundAccount = await getAccount(username);
@@ -50,7 +49,6 @@ const handler = middy()
       });
     }
     const truIfCreatedAccount = await createAccount(username, password);
-  
     if (truIfCreatedAccount) {
       return sendResponse({
         success: true,

@@ -19,7 +19,6 @@ const handler = middy()
         TableName: quizTable,
       }
       const result = await db.send(new ScanCommand(params));
-     
       let quizArray = []
       result.Items.forEach((object)=>{
       

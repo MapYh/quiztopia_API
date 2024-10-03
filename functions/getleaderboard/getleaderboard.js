@@ -11,8 +11,6 @@ const handler = middy()
       
       if (event.error == "400")
       return sendError(400, { success: false, message: "Invalid event body, it should be empty." });
-
-
       const leaderTable = process.env.LEADER_TABLE;
       const params = {
         TableName: leaderTable,

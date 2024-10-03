@@ -22,7 +22,6 @@ const registerpointsvalidation = {
         return request.response;
       }
     },
-    
     onError: async (request) => {
       request.event.error = "400";
       return request.response;
