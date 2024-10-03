@@ -43,26 +43,27 @@ const handler = middy()
         }
         const leaderboardresult = await db.send(new GetCommand( GetleaderBoardParams ));
       
-    if(leaderboardresult.Item){
-        if(points > leaderboardresult.Item.points){
-            const putParams = {
-                TableName: leaderTable,
-                Item: {
-                    quizId,
-                    name,
-                    points,
-                    userId,
-                    leaderBoardId
-                }
-        }
-        const putresult = await db.send(new PutCommand( putParams ));
-      
-        if(putresult){
-            return sendResponse({success: true, message: "New leaderboard score registered."});
-        }
-    }else{
-        return sendResponse({success: true, message: "No new highscore."});
-    }
+        if(leaderboardresult.Item){
+           
+            if(points > JSON.parse(leaderboardresult.Item.points)){
+                const putParams = {
+                    TableName: leaderTable,
+                    Item: {
+                        quizId,
+                        name,
+                        points,
+                        userId,
+                        leaderBoardId
+                    }
+            }
+            const putresult = await db.send(new PutCommand( putParams ));
+            
+            if(putresult){
+                return sendResponse({success: true, message: "New leaderboard score registered."});
+            }
+            }else{
+                return sendResponse({success: true, message: "No new highscore."});
+            }
    
 }
 const putParams = {
