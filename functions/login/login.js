@@ -1,11 +1,19 @@
 import { sendResponse, sendError } from "../../utils/sendResponse";
 const { getAccount } = require("../../services/getAccount");
 const jwt = require("jsonwebtoken");
+import middy from "@middy/core";
+const { loginvalidation } = require("../../services/requestValidation/loginvalidation");
 
-exports.handler = async (event) => {
+
+const handler = middy()
+.handler( async (event) => {
   const { username, password } = JSON.parse(event.body);
 
   try {
+
+    if (event.error == "400")
+    return sendError(400, { success: false, message: "Invalid request body, it should contain the username and password." });
+
     if (!username)
       return sendError(400, { success: false, message: "Invalid username" });
 
@@ -38,4 +46,6 @@ exports.handler = async (event) => {
       message: "Could not get account", error: error.message,
     });
   }
-};
+}).use( loginvalidation );
+
+module.exports = { handler };

@@ -2,9 +2,8 @@ import { sendResponse, sendError } from "../../utils/sendResponse.js";
 const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
 const db = require("../../services/db.js");
 import middy from "@middy/core";
-
-
 const {getvalidation} = require("../../services/requestValidation/getvalidation.js");
+
 
 const handler = middy()
   .handler(async (event) => {
