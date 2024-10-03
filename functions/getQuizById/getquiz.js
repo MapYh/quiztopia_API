@@ -19,16 +19,21 @@ const handler = middy()
         KeyConditionExpression: "quizId = :v1",
         ExpressionAttributeValues: {
           ":v1": quizId,
-        },
-        ProjectionExpression: "questions",
+        }
       };
-      console.log("queryParams", queryParams);
+     
       const result = await db.send(new QueryCommand(queryParams));
 
       if (!result.Items) {
         return sendResponse({
           success: false,
           message: "Could not find a user with that quiz.",
+        });
+      }
+      if(result.Items.length == 0){
+        return sendResponse({
+          success: false,
+          message: "Could not find any quizes, maybe check the quizId.",
         });
       }
       return sendResponse({
