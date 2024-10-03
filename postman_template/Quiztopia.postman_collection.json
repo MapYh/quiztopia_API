@@ -1,0 +1,348 @@
+{
+	"info": {
+		"_postman_id": "e6669866-8a86-4353-8544-5a687583bcce",
+		"name": "Quiztopia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33910593"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"ddds23423\",\r\n\r\n  \"password\": \"string\"\r\n \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/auth/login",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"ddds23423\",\r\n\r\n  \"password\": \"string\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/auth/signup",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post a quiz",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid');\r",
+							"postman.setEnvironmentVariable('guid', uuid.v4());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk3ZGJiZmMzLTNjYjYtNDVmMS1iY2ZhLTg2ZjExOTQ2ZTIxZSIsImlhdCI6MTcyNzk5MDUwMywiZXhwIjoxNzI4MDIwNTAzfQ.lK_lTBbLbmoPeVhk6m3abF7h0sYmgawo_vO1XbhcoEo",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"strings\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/quiz",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add a question to a quiz",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk3ZGJiZmMzLTNjYjYtNDVmMS1iY2ZhLTg2ZjExOTQ2ZTIxZSIsImlhdCI6MTcyNzk5MDUwMywiZXhwIjoxNzI4MDIwNTAzfQ.lK_lTBbLbmoPeVhk6m3abF7h0sYmgawo_vO1XbhcoEo",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"strings\",\r\n  \"question\": \"what is the capital of Sweden?\",\r\n  \"answer\": \"Stockholm\",\r\n  \"location\": {\r\n    \"longitude\": \"string\",\r\n    \"latitude\": \"string\"\r\n  },\r\n  \"quizId\": \"6a45fc98-9958-4f04-9fbb-ff5a402c07f6\",\r\n  \"userid\": \"97dbbfc3-3cb6-45f1-bcfa-86f11946e21e\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/quiz/question",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"quiz",
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a quiz",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk3ZGJiZmMzLTNjYjYtNDVmMS1iY2ZhLTg2ZjExOTQ2ZTIxZSIsImlhdCI6MTcyNzk5MDUwMywiZXhwIjoxNzI4MDIwNTAzfQ.lK_lTBbLbmoPeVhk6m3abF7h0sYmgawo_vO1XbhcoEo",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"strings\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/quiz/6a45fc98-9958-4f04-9fbb-ff5a402c07f6",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"quiz",
+						"6a45fc98-9958-4f04-9fbb-ff5a402c07f6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a quiz",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/quiz/ba3e19d9-e556-4eab-9e60-3cea3cf0ae03",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"quiz",
+						"ba3e19d9-e556-4eab-9e60-3cea3cf0ae03"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all quizes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/quiz",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register points",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"quizId\": \"b5c554b5-1179-4f65-bad7-4586034bfcc6\",\r\n    \"name\": \"strings\",\r\n    \"userId\": \"578990bb-6bb3-40a1-ba71-dccd6bfce6ad\",\r\n    \"points\": \"10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/registerpoints",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"registerpoints"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get leaderboard",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://hdwupvnb89.execute-api.eu-north-1.amazonaws.com/leaderboard",
+					"protocol": "https",
+					"host": [
+						"hdwupvnb89",
+						"execute-api",
+						"eu-north-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"leaderboard"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
