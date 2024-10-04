@@ -11,13 +11,14 @@ const {
 const handler = middy()
   .handler(async (event) => {
     try {
+      //Error handling from middleware.
       if (event.error == "400")
         return sendError(400, {
           success: false,
           message:
             "Somethings wrong with the request body, check that there is six keys, and no spelling errors.",
         });
-
+      //Token checker.
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
 
@@ -54,6 +55,7 @@ const handler = middy()
           message: "Could not find a quiz with that name",
         });
       } else {
+        //Check if the question is already in the quiz.
         for (let i = 0; i < result.Item.questions.length; i++) {
           if (result.Item.questions[i].question == question.question) {
             return sendResponse({
@@ -90,9 +92,9 @@ const handler = middy()
             userid: userid,
           },
         };
-
+        //Put new question into quiz.
         const putResult = await db.send(new PutCommand(saveparams));
-
+        //Get the new questions so that they can be displayed in the respons body.
         const getResult = await db.send(new GetCommand(getParamstwo));
         if (putResult) {
           return sendResponse({

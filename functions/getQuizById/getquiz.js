@@ -9,6 +9,7 @@ const {
 const handler = middy()
   .handler(async (event) => {
     try {
+      //Error handling from middleware.
       if (event.error == "400")
         return sendError(400, {
           success: false,
@@ -25,7 +26,7 @@ const handler = middy()
           ":v1": quizId,
         },
       };
-
+      //Query the data abse for the quiz.
       const result = await db.send(new QueryCommand(queryParams));
 
       if (!result.Items) {
@@ -40,6 +41,7 @@ const handler = middy()
           message: "Could not find any quizes, check the quizId.",
         });
       }
+      //If it exists return the item.
       return sendResponse({
         success: true,
         message: result.Items,

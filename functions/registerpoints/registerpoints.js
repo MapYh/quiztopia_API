@@ -12,11 +12,12 @@ const {
 const handler = middy()
   .handler(async (event) => {
     try {
+      //Error handling from middleware.
       if (event.error == "400")
         return sendError(400, {
           success: false,
           message:
-            "Somethings wrong with the request body, check that the points are positive, and that all the keys exist, there should be four keys.",
+            "Somethings wrong with the request body, check that the points are positive, and that all the keys exist, there should be four keys. (quizId, name, userid, points)",
         });
 
       const quizTable = process.env.QUIZ_TABLE;
@@ -103,7 +104,10 @@ const handler = middy()
             });
           }
         } else {
-          return sendResponse({ success: true, message: "No new highscore." });
+          return sendResponse({
+            success: true,
+            message: "No new highscore.",
+          });
         }
       }
       const putParams = {

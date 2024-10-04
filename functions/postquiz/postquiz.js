@@ -4,24 +4,29 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 const uuid = require("uuid");
 const { validateToken } = require("../../services/auth");
-const { delete_post_validation } = require("../../services/requestValidation/delete_post_validation.js");
+const {
+  delete_post_validation,
+} = require("../../services/requestValidation/delete_post_validation.js");
 
 const handler = middy()
   .handler(async (event) => {
     try {
-
+      //Error handling from middleware.
       if (event.error == "400")
-        return sendError(400, { success: false, message: "Request body should only contain the name of the quiz." });
+        return sendError(400, {
+          success: false,
+          message: "Request body should only contain the name of the quiz.",
+        });
 
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
 
       const quizTable = process.env.QUIZ_TABLE;
-   
 
       const { name } = JSON.parse(event.body);
       const id = uuid.v4();
-   
+
+      //Params for the user quiz that needs to go to the db.
       const newQuiz = {
         TableName: quizTable,
         Item: { name: name, quizId: id, questions: [], userid: event?.id },
@@ -34,11 +39,11 @@ const handler = middy()
           name: name,
         },
       };
-     
+
       const result = await db.send(new GetCommand(getParams));
       if (!result.Item) {
         const putResult = await db.send(new PutCommand(newQuiz));
-      
+
         if (putResult) {
           return sendResponse({
             success: true,
@@ -63,6 +68,7 @@ const handler = middy()
       return sendError(500, { success: false, message: error.message });
     }
   })
-  .use(validateToken).use(delete_post_validation);
+  .use(validateToken)
+  .use(delete_post_validation);
 
 module.exports = { handler };

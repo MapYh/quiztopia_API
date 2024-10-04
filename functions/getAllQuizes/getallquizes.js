@@ -10,6 +10,7 @@ const {
 const handler = middy()
   .handler(async (event) => {
     try {
+      //Error handling from middleware.
       if (event.error == "400")
         return sendError(400, {
           success: false,
@@ -20,6 +21,7 @@ const handler = middy()
       const params = {
         TableName: quizTable,
       };
+      //Get all quizes with a scan.
       const result = await db.send(new ScanCommand(params));
       let quizArray = [];
       result.Items.forEach((object) => {

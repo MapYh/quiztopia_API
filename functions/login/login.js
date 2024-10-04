@@ -2,49 +2,60 @@ import { sendResponse, sendError } from "../../utils/sendResponse";
 const { getAccount } = require("../../services/getAccount");
 const jwt = require("jsonwebtoken");
 import middy from "@middy/core";
-const { loginsignupvalidation } = require("../../services/requestValidation/login_signupvalidation");
-
+const {
+  loginsignupvalidation,
+} = require("../../services/requestValidation/login_signupvalidation");
 
 const handler = middy()
-.handler( async (event) => {
-  const { username, password } = JSON.parse(event.body);
-  try {
+  .handler(async (event) => {
+    const { username, password } = JSON.parse(event.body);
+    try {
+      //Error handling from middleware.
+      if (event.error == "400")
+        return sendError(400, {
+          success: false,
+          message:
+            "Invalid request body, it should contain the username and password.",
+        });
 
-    if (event.error == "400")
-    return sendError(400, { success: false, message: "Invalid request body, it should contain the username and password." });
+      if (!username)
+        return sendError(400, { success: false, message: "Invalid username" });
 
-    if (!username)
-      return sendError(400, { success: false, message: "Invalid username" });
+      const account = await getAccount(username);
 
-    const account = await getAccount(username);
+      if (!account)
+        return sendError(401, { success: false, message: "No account found" });
 
-    if (!account)
-      return sendError(401, { success: false, message: "No account found" });
+      if (account.password == password) {
+        const token = jwt.sign(
+          { id: account.userId },
+          process.env.TOKEN_SECRET,
+          {
+            expiresIn: 30000,
+          }
+        );
 
-    if (account.password == password) {
-      const token = jwt.sign({ id: account.userId }, process.env.TOKEN_SECRET, {
-        expiresIn: 30000,
-      });
+        /*   console.log("TOKEN", token); */
 
-    /*   console.log("TOKEN", token); */
-
-      return sendResponse({
-        success: true,
-        token: token,
-        account: account,
-      });
-    } else {
-      return sendError(400, {
+        return sendResponse({
+          success: true,
+          token: token,
+          account: account,
+        });
+      } else {
+        return sendError(400, {
+          success: false,
+          message: "Wrong password.",
+        });
+      }
+    } catch (error) {
+      return sendError(500, {
         success: false,
-        message: "Wrong password.",
+        message: "Could not get account",
+        error: error.message,
       });
     }
-  } catch (error) {
-    return sendError(500, {
-      success: false,
-      message: "Could not get account", error: error.message,
-    });
-  }
-}).use( loginsignupvalidation);
+  })
+  .use(loginsignupvalidation);
 
 module.exports = { handler };
