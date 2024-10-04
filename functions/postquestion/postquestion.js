@@ -4,29 +4,31 @@ const db = require("../../services/db.js");
 import middy from "@middy/core";
 
 const { validateToken } = require("../../services/auth");
-const { postquestionvalidation } = require("../../services/requestValidation/postquestion_validation.js");
-
-
+const {
+  postquestionvalidation,
+} = require("../../services/requestValidation/postquestion_validation.js");
 
 const handler = middy()
   .handler(async (event) => {
     try {
-
       if (event.error == "400")
-      return sendError(400, { success: false, message: "Somethings wrong with the request body, check that there is six keys, and no spelling errors." });
+        return sendError(400, {
+          success: false,
+          message:
+            "Somethings wrong with the request body, check that there is six keys, and no spelling errors.",
+        });
 
       if (!event?.id || (event?.error && event?.error === "401"))
         return sendError(401, { success: false, message: "Invalid token" });
 
       const quizTable = process.env.QUIZ_TABLE;
-    
 
       const question = JSON.parse(event.body);
       const { name, quizId, userid } = JSON.parse(event.body);
-    if(userid != event?.id){
-      return sendResponse({ message: "Wrong userid for that quiz." });
-    }
-   
+      if (userid != event?.id) {
+        return sendResponse({ message: "Wrong userid for that quiz." });
+      }
+
       const getParams = {
         TableName: quizTable,
         Key: {
@@ -35,27 +37,32 @@ const handler = middy()
         },
       };
 
-  
-      const result = await db.send(new GetCommand(getParams
-      ));
-      
-  
+      const result = await db.send(new GetCommand(getParams));
+      if (name != result.Item.name) {
+        return sendError(400, {
+          success: false,
+          message: "Wrong name of quiz.",
+        });
+      }
+
       if (event.id != result.Item.userid) {
         return sendResponse({ message: "Wrong account for that quiz." });
       }
-     
+
       if (!result.Item) {
         return sendResponse({
           message: "Could not find a quiz with that name",
         });
       } else {
-        for(let i = 0;  i< result.Item.questions.length; i++){
-          if(result.Item.questions[i].question == question.question){
-            return sendResponse({success: false, message: "That question is already in the quiz."});
+        for (let i = 0; i < result.Item.questions.length; i++) {
+          if (result.Item.questions[i].question == question.question) {
+            return sendResponse({
+              success: false,
+              message: "That question is already in the quiz.",
+            });
           }
         }
-   
-        
+
         const newquestion = {
           TableName: quizTable,
           Item: {
@@ -69,44 +76,41 @@ const handler = middy()
           Key: {
             quizId: question.quizId,
             name,
-            
           },
         };
 
-     
         result.Item.questions.push(newquestion.Item);
-       
+
         const saveparams = {
           TableName: quizTable,
           Item: {
             quizId,
             name,
             questions: result.Item.questions,
-            userid: userid
+            userid: userid,
           },
-        }; 
-        const getResult = await db.send(new GetCommand(getParamstwo));
+        };
 
         const putResult = await db.send(new PutCommand(saveparams));
-       
-   
-          if (putResult) {
-            return sendResponse({
-              success: true,
-              message: getResult.Item,
-            });
-          } else {
-            return sendError(400, {
-              success: false,
-              message: "No new question added.",
-            });
-          }
+
+        const getResult = await db.send(new GetCommand(getParamstwo));
+        if (putResult) {
+          return sendResponse({
+            success: true,
+            message: getResult.Item,
+          });
+        } else {
+          return sendError(400, {
+            success: false,
+            message: "No new question added.",
+          });
         }
-    
+      }
     } catch (error) {
       return sendError(500, { success: false, message: error.message });
     }
   })
-  .use(validateToken).use(postquestionvalidation);
+  .use(validateToken)
+  .use(postquestionvalidation);
 
 module.exports = { handler };
